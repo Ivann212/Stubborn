@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello CartController!{% endblock %}
 
 {% block body %}
 <style>
@@ -59,7 +59,7 @@
     }
 
     nav ul li a:hover {
-        color: red;
+        color: #ff9900;
     }
 
     main {
@@ -89,7 +89,7 @@
     .footer-section h4 {
         margin-bottom: 10px;
         font-size: 1.1rem;
-        color: red;
+        color: #ff9900;
     }
 
     .footer-section p {
@@ -99,12 +99,12 @@
     .footer-bottom {
         font-size: 2rem;
         margin-top: 20px;
-        border-top: 3px solid #666;
+        border-top: 1px solid #666;
         padding-top: 10px;
     }
 
     .footer a {
-        color: red;
+        color: #ff9900;
         text-decoration: none;
     }
 
@@ -115,65 +115,27 @@
 
 </style>
 
-
-
-<body>
-
-    <div class="page-wrapper">
-        <header>
+<div class="example-wrapper">
+    <header>
             <div class="container">
                 <div class="logo">
                     <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
-                    <p>Don't compromise on your look</p>
-                                   
                 </div>
                 <nav>
                     <ul class="nav-links">
                         {% if app.user is not null %}
+                            <li><a href="/">Accueil</a></li>
                             <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">Panier</a></li>
+                            <li><a href="/cart">S'inscrire</a></li>
                             <li><a href="/logout">Se déconnecter</a></li>
                         {% else %}
                             <li><a href="/">Accueil</a></li>
                             <li><a href="/login">Se connecter</a></li>
                             <li><a href="/register">S'inscrire</a></li>
-                            <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">Panier</a></li>
                         {% endif %}
                     </ul>
                 </nav>
             </div>
         </header>
-        <main>
-            <h1>Bienvenue sur Stubborn shop</h1>
-            <div class="card">
-                <img src="{{asset('images/image')}}">
-            
-            </div>
-        </main>
-
-        <footer>
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <h4>Nom de la société</h4>
-                        <p>Stubborn</p>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Adresse</h4>
-                        <p>Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Contact</h4>
-                        <p>Email: <a href="mailto:stubborn@blabla.com">stubborn@blabla.com</a></p>
-                    </div>
-                    
-                </div>
-                <div class="footer-bottom">
-                    <p>Don't compromise on your look</p>
-                </div>
-            </div>
-        </footer>
-    </div>
-</body>
+</div>
 {% endblock %}
