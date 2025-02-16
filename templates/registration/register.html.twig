@@ -14,12 +14,15 @@
     html, body {
         height: 100%;
         font-family: Arial, sans-serif;
+        background-color: #fff;
+
     }
 
     .page-wrapper {
         display: flex;
         flex-direction: column;
-        min-height: 100vh; /* Cela garantit que la page occupe toute la hauteur de l'écran */
+        min-height: 100vh;
+         
     }
 
     header {
@@ -59,12 +62,102 @@
     }
 
     nav ul li a:hover {
-        color: #ff9900;
+        color: red;
+    }
+
+    .nav-links a.active {
+        font-weight: bold;
+        text-decoration: underline;
+        color: red; 
     }
 
     main {
-        flex: 1; /* Cette propriété assure que l'élément main prend tout l'espace disponible */
+        flex: 1; 
         padding: 20px;
+        margin-top: 40px;
+        text-align: center;
+    }
+    form {
+        max-width: 400px;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        color: white;
+    }
+
+    /* Style des champs de formulaire */
+    form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    /* Style du bouton */
+    .btn {
+        width: 90%;
+        padding: 10px;
+        background-color: red;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 20px;
+    }
+
+    .btn:hover {
+        background-color: black;
+    }
+
+    /* Style des erreurs de formulaire */
+    form .error {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    /* Espacement entre les champs */
+    form div {
+        margin-bottom: 15px;
+    }
+    .formdiv {
+        width: 400px; 
+        margin: 0 auto; 
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f9f9f9;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    .login-section {
+        border-top: 2px solid red;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .login-section h2 {
+        margin: 20px;
+        font-size: 1.4rem;
+        color: #333;
+    }
+    .login-section a {
+        text-decoration: none;
+    }
+    h1 {
+        color: #333;
     }
 
     footer {
@@ -89,7 +182,7 @@
     .footer-section h4 {
         margin-bottom: 10px;
         font-size: 1.1rem;
-        color: #ff9900;
+        color: red;
     }
 
     .footer-section p {
@@ -99,12 +192,12 @@
     .footer-bottom {
         font-size: 2rem;
         margin-top: 20px;
-        border-top: 1px solid #666;
+        border-top: 3px solid #666;
         padding-top: 10px;
     }
 
     .footer a {
-        color: #ff9900;
+        color: red;
         text-decoration: none;
     }
 
@@ -124,21 +217,24 @@
             <div class="container">
                 <div class="logo">
                     <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
+                    <p>Don't compromise on your look</p>
+                                   
                 </div>
                 <nav>
                     <ul class="nav-links">
                         {% if app.user is not null %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">S'inscrire</a></li>
+                            <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                            <li><a href="/product" class="{{ app.request.attributes.get('_route') == 'app_product' ? 'active' : '' }}">Boutique</a></li>
+                            <li><a href="/cart" class="{{ app.request.attributes.get('_route') == 'app_cart' ? 'active' : '' }}">Panier</a></li>
                             <li><a href="/logout">Se déconnecter</a></li>
                         {% else %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/login">Se connecter</a></li>
-                            <li><a href="/register">S'inscrire</a></li>
+                            <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                            <li><a href="/login" class="{{ app.request.attributes.get('_route') == 'app_login' ? 'active' : '' }}">Se connecter</a></li>
+                            <li><a href="/register" class="{{ app.request.attributes.get('_route') == 'app_register' ? 'active' : '' }}">S'inscrire</a></li>
                         {% endif %}
                     </ul>
                 </nav>
+
             </div>
         </header>
         <main>
@@ -146,26 +242,26 @@
                 <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
             {% endfor %}
 
-            <h1>Register</h1>
+            <h1>S'inscrire</h1>
+            <div class="formdiv">
+                {{ form_errors(registrationForm) }}
 
-            {{ form_errors(registrationForm) }}
+                {{ form_start(registrationForm) }}
+                    {{ form_row(registrationForm.name, { label: 'Nom utilisateur :' }) }}
+                    {{ form_row(registrationForm.email, { label: 'Adresse mail :' }) }}
+                    {{ form_row(registrationForm.deliveryAddress, { label: 'Adresse de livraison' }) }}
+                    {{ form_row(registrationForm.plainPassword, { label: 'Mot de passe' }) }}
 
-            {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.email) }}
-                {{ form_row(registrationForm.plainPassword, {
-                    label: 'Password'
-                }) }}
-                {{ form_row(registrationForm.name, {
-                    label: 'Full Name'
-                }) }}
-                {{ form_row(registrationForm.deliveryAddress, {
-                    label: 'Delivery Address'
-                }) }}
-                
-                
+                    <button type="submit" class="btn">Créer un compte</button>
 
-                <button type="submit" class="btn">Register</button>
-            {{ form_end(registrationForm) }}
+                    <!-- Nouvelle div pour aligner le texte et le bouton -->
+                    <div class="login-section">
+                        <h2>Déjà inscrit ?</h2>
+                        <a href="/login" class="btn">Se Connecter</a>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+            
             
         </main>
 

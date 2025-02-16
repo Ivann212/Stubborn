@@ -1,6 +1,6 @@
 <?php
 
-// src/Form/ProductSizeStockType.php
+// src/Form/ProductSizeType.php
 namespace App\Form;
 
 use App\Entity\ProductSize;
@@ -10,13 +10,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductSizeStockType extends AbstractType
+class ProductSizeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('size', TextType::class)
-            ->add('quantity', NumberType::class);
+                        
+            // Quantité de cette taille
+            ->add('quantity', NumberType::class, [
+                'label' => 'Quantité',
+                'attr' => ['min' => 0],  // La quantité ne peut pas être négative
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -26,6 +30,9 @@ class ProductSizeStockType extends AbstractType
         ]);
     }
 }
+
+
+
 
 
 

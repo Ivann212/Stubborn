@@ -1,7 +1,6 @@
 <?php
 
-
-
+// src/Entity/ProductSize.php
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,16 +9,26 @@ use Doctrine\ORM\Mapping as ORM;
 class ProductSize
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'sizeStocks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
-    #[ORM\Id]
-    #[ORM\Column(type: "string", length: 10)]
-    private ?string $size = null;
+    #[ORM\Column(type: "string", length: 10, nullable: true)]
+    private ?string $size = null; // Size (XS, S, M, L, XL)
+
+   
 
     #[ORM\Column(type: "integer")]
     private ?int $quantity = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getProduct(): ?Product
     {
@@ -37,7 +46,7 @@ class ProductSize
         return $this->size;
     }
 
-    public function setSize(string $size): self
+    public function setSize(?string $size): self
     {
         $this->size = $size;
         return $this;
@@ -54,5 +63,6 @@ class ProductSize
         return $this;
     }
 }
+
 
 

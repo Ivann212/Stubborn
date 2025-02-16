@@ -10,15 +10,18 @@
             box-sizing: border-box;
         }
 
+
         html, body {
             height: 100%;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
         }
 
         .page-wrapper {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Cela garantit que la page occupe toute la hauteur de l'écran */
+            min-height: 100vh;
         }
 
         header {
@@ -58,19 +61,149 @@
         }
 
         nav ul li a:hover {
-            color: #ff9900;
+            color: red;
         }
 
         main {
-            flex: 1; /* Cette propriété assure que l'élément main prend tout l'espace disponible */
-            padding: 20px;
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            padding: 5px;
+            color: #fff;
+            border: 3px solid #fff;
+            border-radius: 5px;
+        }
+
+
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            color: #333;
+        }
+        .formulaire {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+
+        }
+
+        .form-row {
+            margin: 20px;
+        }
+
+        .form-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-row input, .form-row select {
+            width: 100%;
+            padding: 10px;
+            border: 3px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-row input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .form-row input:focus, .form-row select:focus {
+            border-color: red;
+            outline: none;
+        }
+
+        .form-row button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .form-row button a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .addbutton {
+            text-align: right;
+            margin-right: 20px;
+        }
+        .addbutton button {
+            width: 300px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+
+        }
+
+        .champForm {
+            display: flex;
+            flex-direction: row;
+        }
+        .formsButton {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            margin-right: 20px;
+        }
+
+        .form-row button:hover {
+            background-color: red;
+        }
+        .forms {
+            display: flex;
+            flex-direction: row;
+        }
+        #size-stocks {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .alert {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-error {
+            background-color: #f44336;
+        }
+
+        .products {
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card {
+            display: flex;
+            flex-direction: row;
+            margin: 10px;
+            padding: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
 
         footer {
-            background-color: #333;
-            color: #fff;
-            padding: 30px 0;
-            text-align: center;
+        background-color: #333;
+        color: #fff;
+        padding: 30px 0;
+        text-align: center;
         }
 
         .footer-content {
@@ -88,7 +221,7 @@
         .footer-section h4 {
             margin-bottom: 10px;
             font-size: 1.1rem;
-            color: #ff9900;
+            color: red;
         }
 
         .footer-section p {
@@ -98,12 +231,12 @@
         .footer-bottom {
             font-size: 2rem;
             margin-top: 20px;
-            border-top: 1px solid #666;
+            border-top: 3px solid #666;
             padding-top: 10px;
         }
 
         .footer a {
-            color: #ff9900;
+            color: red;
             text-decoration: none;
         }
 
@@ -117,13 +250,15 @@
             <div class="container">
                 <div class="logo">
                     <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
+                    <p>Don't compromise on your look</p>
                 </div>
+                <h1>Back-Office</h1>
                 <nav>
                     <ul class="nav-links">
                         {% if app.user is not null %}
                             <li><a href="/">Accueil</a></li>
                             <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">S'inscrire</a></li>
+                            <li><a href="/cart">Panier</a></li>
                             <li><a href="/logout">Se déconnecter</a></li>
                         {% else %}
                             <li><a href="/">Accueil</a></li>
@@ -135,30 +270,135 @@
             </div>
         </header>
         <main>
-            <h1>Ajouter un nouveau produit</h1>
+
 
             {% if app.session.flashbag().has('success') %}
-                <div class="alert alert-success">
-                    {{ app.session.flashbag().get('success')[0] }}
-                </div>
+                <div class="alert">{{ app.session.flashbag().get('success')[0] }}</div>
             {% endif %}
 
-            <h2>Ajouter un produit</h2>
+            {% if app.session.flashbag().has('error') %}
+                <div class="alert alert-error">{{ app.session.flashbag().get('error')[0] }}</div>
+            {% endif %}
+            <div class="formulaire">
+                {{ form_start(form) }}
+                    <div class="forms">
+                        <div class="form-row">
+                            {{ form_row(form.imageFilename) }}
+                        </div>
 
-            {{ form_start(form) }}
-                {{ form_row(form.name) }}
-                {{ form_row(form.price) }}
-                {{ form_row(form.imageFilename) }}
+                        <div class="form-row">
+                            {{ form_row(form.name) }}
+                        </div>
 
-                <h3>Tailles et Quantités</h3>
-                <div id="size-stocks">
-                    {{ form_row(form.sizeStocks) }}
+                        <div class="form-row">
+                            {{ form_row(form.price) }}
+                        </div>
+                        
+                        <div id="size-stocks">
+                            {% for sizeStock in form.sizeStocks %}
+                                <div class="form-row">
+                                    <label for="{{ sizeStock.quantity.vars.id }}">
+                                        Stock {{ sizeStock.vars.data.size }} :
+                                    </label>
+                                    {{ form_widget(sizeStock.quantity) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+                    <div class="addbutton">
+                        <button type="submit">Ajouter</button>
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+            <div class="formModif">
+                <div class="products">
+                    {% for product in products %}
+                        <div class="product-card">
+                            <img src=" {{ asset('images/' ~ product.imageFilename) }}" alt="{{ product.name }}">
+
+                            {# Formulaire de modification par produit #}
+                            <div class="formModif">
+                                <form method="POST" action="{{ path('app_backoffice') }}">
+                                    <input type="hidden" name="edit_product_id" value="{{ product.id }}">
+
+                                    {% if editForms[product.id] is defined %}
+                                    <div class="champForm">
+                                        {{ form_start(editForms[product.id]) }}
+
+                                            <div class="form-row">
+                                                {{ form_row(editForms[product.id].imageFilename) }}
+                                            </div>
+
+                                            <div class="form-row">
+                                                {{ form_row(editForms[product.id].name) }}
+                                            </div>
+
+                                            <div class="form-row">
+                                                {{ form_row(editForms[product.id].price) }}
+                                            </div>
+
+                                            <div id="size-stocks">
+                                                {% for sizeStock in editForms[product.id].sizeStocks %}
+                                                    <div class="form-row">
+                                                        <label for="{{ sizeStock.quantity.vars.id }}">
+                                                            Stock {{ sizeStock.vars.data.size }} :
+                                                        </label>
+                                                        {{ form_widget(sizeStock.quantity) }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                    </div>
+                                        
+                                            <div class="formsButton">
+                                                <div class="form-row">
+                                                    <button type="submit">Modifier</button>
+                                                </div>
+                                                <div class="form-row">
+                                                    <button type="submit"><a href="app_backoffice_delete">Supprimer</a></button>
+                                                </div>
+                                            </div>
+                                        
+
+                                        {{ form_end(editForms[product.id]) }}
+                                    {% else %}
+                                        <p>Formulaire de modification non disponible.</p>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
                 </div>
 
-                <button type="submit">Ajouter le produit</button>
-            {{ form_end(form) }}
-        </main>
-    </div>
 
-    
+            </div>
+
+        </main>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Nom de la société</h4>
+                        <p>Stubborn</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Adresse</h4>
+                        <p>Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p>Email: <a href="mailto:stubborn@blabla.com">stubborn@blabla.com</a></p>
+                    </div>
+                    
+                </div>
+                <div class="footer-bottom">
+                    <p>Don't compromise on your look</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 {% endblock %}

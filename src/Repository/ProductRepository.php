@@ -15,6 +15,14 @@ class ProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Product::class);
     }
+    public function findFeaturedProducts(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.featured = :val')
+            ->setParameter('val', true)
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return Product[] Returns an array of Product objects

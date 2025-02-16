@@ -14,6 +14,7 @@
     html, body {
         height: 100%;
         font-family: Arial, sans-serif;
+        background-color: #fff;
     }
 
     .page-wrapper {
@@ -59,13 +60,96 @@
     }
 
     nav ul li a:hover {
-        color: #ff9900;
+        color: red;
+    }
+
+    .nav-links a.active {
+        font-weight: bold;
+        text-decoration: underline;
+        color: red; 
     }
 
     main {
         flex: 1; /* Cette propriété assure que l'élément main prend tout l'espace disponible */
         padding: 20px;
     }
+    /* Style général du formulaire */
+    .login-form {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-top: 200px;
+    }
+
+    /* Style des labels */
+    .login-form label {
+        font-weight: bold;
+        display: block;
+        margin: 10px 0 5px;
+        color: #333;
+        text-align: left;
+    }
+
+    /* Style des champs de formulaire */
+    .login-form input[type="email"],
+    .login-form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 2px solid black;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    /* Bouton de connexion */
+    .login-form .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: red;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .login-form .btn:hover {
+        background-color: black;
+    }
+
+    .alert.alert-danger {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid red;
+        background: #ffe6e6;
+        border-radius: 5px;
+    }
+
+    .register-form a:hover {
+        text-decoration: underline;
+    }
+    .register-section {
+        border-top: 2px solid red;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .register-section h2 {
+        margin: 20px;
+        font-size: 1.4rem;
+        color: #333;
+    }
+    .register-section a {
+        text-decoration: none;
+    }
+
 
     footer {
         background-color: #333;
@@ -89,7 +173,7 @@
     .footer-section h4 {
         margin-bottom: 10px;
         font-size: 1.1rem;
-        color: #ff9900;
+        color: red;
     }
 
     .footer-section p {
@@ -99,12 +183,12 @@
     .footer-bottom {
         font-size: 2rem;
         margin-top: 20px;
-        border-top: 1px solid #666;
+        border-top: 3px solid #666;
         padding-top: 10px;
     }
 
     .footer a {
-        color: #ff9900;
+        color: red;
         text-decoration: none;
     }
 
@@ -124,51 +208,59 @@
             <div class="container">
                 <div class="logo">
                     <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
+                    <p>Don't compromise on your look</p>
+                                   
                 </div>
                 <nav>
                     <ul class="nav-links">
                         {% if app.user is not null %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">S'inscrire</a></li>
+                            <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                            <li><a href="/product" class="{{ app.request.attributes.get('_route') == 'app_product' ? 'active' : '' }}">Boutique</a></li>
+                            <li><a href="/cart" class="{{ app.request.attributes.get('_route') == 'app_cart' ? 'active' : '' }}">Panier</a></li>
                             <li><a href="/logout">Se déconnecter</a></li>
                         {% else %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/login">Se connecter</a></li>
-                            <li><a href="/register">S'inscrire</a></li>
+                            <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                            <li><a href="/login" class="{{ app.request.attributes.get('_route') == 'app_login' ? 'active' : '' }}">Se connecter</a></li>
+                            <li><a href="/register" class="{{ app.request.attributes.get('_route') == 'app_register' ? 'active' : '' }}">S'inscrire</a></li>
                         {% endif %}
                     </ul>
                 </nav>
+
             </div>
         </header>
         <main>
-            <form method="post">
+            <form method="post" class="login-form">
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
 
                 {% if app.user %}
                     <div class="mb-3">
-                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        Vous êtes connecté en tant que {{ app.user.userIdentifier }}, 
+                        <a href="{{ path('app_logout') }}">Se déconnecter</a>
                     </div>
                 {% endif %}
 
-                <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+
                 <label for="username">Email</label>
                 <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-                <label for="password">Password</label>
+
+                <label for="password">Mot de passe</label>
                 <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
 
-                <input type="hidden" name="_csrf_token"
-                    value="{{ csrf_token('authenticate') }}"
-                >
-
-            
-
-                <button class="btn btn-lg btn-primary" type="submit">
-                    Sign in
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <p>Mot de passe oublié ?</p>
+                <button class="btn btn-lg" type="submit">
+                    Se connecter
                 </button>
+
+                <div class="register-section">
+                    <h2>Pas encore inscrit ?</h2>
+                    <a href="/register" class="btn">Créer un compte</a>
+                </div>
             </form>
+
             
         </main>
 
@@ -189,9 +281,7 @@
                     </div>
                     
                 </div>
-                <div class="footer-bottom">
-                    <p>Don't compromise on your look</p>
-                </div>
+                
             </div>
         </footer>
     </div>

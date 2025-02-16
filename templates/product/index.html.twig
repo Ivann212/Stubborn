@@ -14,13 +14,17 @@
     html, body {
         height: 100%;
         font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
     }
 
     .page-wrapper {
         display: flex;
         flex-direction: column;
-        min-height: 100vh; /* Cela garantit que la page occupe toute la hauteur de l'écran */
+        min-height: 100vh;
+        text-align: center;
     }
+
 
     header {
     background-color: #333;
@@ -59,19 +63,114 @@
     }
 
     nav ul li a:hover {
-        color: #ff9900;
+        color: red;
+    }
+    .nav-links a.active {
+        font-weight: bold;
+        text-decoration: underline;
+        color: red; 
     }
 
     main {
-        flex: 1; /* Cette propriété assure que l'élément main prend tout l'espace disponible */
-        padding: 20px;
+        flex: 1;   
     }
+    h1 {
+        margin: 20px;
+    }
+    .product-container {
+        margin-top: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center; 
+        justify-content: center; 
+        gap: 20px;      
+    }
+    .product-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        width: 250px;
+        background: white;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+    }
+
+    .product-card img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .product-card h3 {
+        font-size: 1.2rem;
+        margin: 10px 0;
+    }
+
+    .product-card p {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .product-card .btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 15px;
+        background-color: red;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .product-card .btn:hover {
+        background-color: darkred;
+    }
+
+    .filter-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-form label {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .filter-form input {
+        accent-color: red;
+        transform: scale(1.2);
+    }
+
+    .filter-form button {
+        padding: 8px 15px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .filter-form button:hover {
+        background-color: black;
+    }
+
 
     footer {
         background-color: #333;
         color: #fff;
         padding: 30px 0;
         text-align: center;
+        margin-top: auto;
+        
     }
 
     .footer-content {
@@ -89,7 +188,7 @@
     .footer-section h4 {
         margin-bottom: 10px;
         font-size: 1.1rem;
-        color: #ff9900;
+        color: red;
     }
 
     .footer-section p {
@@ -99,12 +198,12 @@
     .footer-bottom {
         font-size: 2rem;
         margin-top: 20px;
-        border-top: 1px solid #666;
+        border-top: 3px solid #666;
         padding-top: 10px;
     }
 
     .footer a {
-        color: #ff9900;
+        color: red;
         text-decoration: none;
     }
 
@@ -115,27 +214,91 @@
 
 </style>
 
-<div class="example-wrapper">
+<div class="page-wrapper">
     <header>
-            <div class="container">
-                <div class="logo">
-                    <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
-                </div>
-                <nav>
-                    <ul class="nav-links">
-                        {% if app.user is not null %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">S'inscrire</a></li>
-                            <li><a href="/logout">Se déconnecter</a></li>
-                        {% else %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/login">Se connecter</a></li>
-                            <li><a href="/register">S'inscrire</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
             </div>
-        </header>
+            <nav>
+                <ul class="nav-links">
+                    {% if app.user is not null %}
+                        <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                        <li><a href="/product" class="{{ app.request.attributes.get('_route') == 'app_product' ? 'active' : '' }}">Boutique</a></li>
+                        <li><a href="/cart" class="{{ app.request.attributes.get('_route') == 'app_cart' ? 'active' : '' }}">Panier</a></li>
+                        <li><a href="/logout">Se déconnecter</a></li>
+                    {% else %}
+                        <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                        <li><a href="/login" class="{{ app.request.attributes.get('_route') == 'app_login' ? 'active' : '' }}">Se connecter</a></li>
+                        <li><a href="/register" class="{{ app.request.attributes.get('_route') == 'app_register' ? 'active' : '' }}">S'inscrire</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h1>Nos Produits</h1>
+        <form method="get" action="{{ path('app_product') }}" class="filter-form">
+                <label>Filtrer par prix :</label>
+
+                <label>
+                    <input type="radio" name="price_range" value="all" {{ selectedRange == 'all' ? 'checked' : '' }}>
+                    Tous les prix
+                </label>
+
+                <label>
+                    <input type="radio" name="price_range" value="10-29" {{ selectedRange == '10-29' ? 'checked' : '' }}>
+                    10 - 29 €
+                </label>
+
+                <label>
+                    <input type="radio" name="price_range" value="30-35" {{ selectedRange == '30-35' ? 'checked' : '' }}>
+                    29 - 35 €
+                </label>
+
+                <label>
+                    <input type="radio" name="price_range" value="35-50" {{ selectedRange == '35-50' ? 'checked' : '' }}>
+                    35 - 50 €
+                </label>
+
+                <button type="submit">Filtrer</button>
+            </form>
+
+            <div class="product-container">
+                {% for product in products %}
+                    <div class="product-card">
+                        <img src="{{ asset('images/' ~ product.imageFilename) }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p>Prix: {{ product.price }} €</p>
+                        <a href="{{ path('product_show', { id: product.id }) }}" class="btn">Voir</a>
+                    </div>
+                {% else %}
+                    <p>Aucun produit disponible.</p>
+                {% endfor %}
+            </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Nom de la société</h4>
+                    <p>Stubborn</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Adresse</h4>
+                    <p>Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:stubborn@blabla.com">stubborn@blabla.com</a></p>
+                </div>
+                    
+            </div>
+            <div class="footer-bottom">
+                <p>Don't compromise on your look</p>
+            </div>
+        </div>
+    </footer>
 </div>
 {% endblock %}

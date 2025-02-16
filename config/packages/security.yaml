@@ -19,18 +19,18 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
+                default_target_path: /
             logout:
                 path: app_logout
+                target: /
     
 
 
     access_control:
         # Rendre accessible seulement aux utilisateurs ayant le rôle ROLE_ADMIN
-        # - { path: ^/backoffice, roles: ROLE_ADMIN }
+        - { path: ^/backoffice, roles: ROLE_ADMIN }
 
-        # Pages publiques
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       
 
 
 when@test:

@@ -4,14 +4,15 @@
 namespace App\Form;
 
 use App\Entity\Product;
-use App\Entity\ProductSizeStock;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+
+
+
 
 class ProductType extends AbstractType
 {
@@ -20,24 +21,35 @@ class ProductType extends AbstractType
         $builder
             ->add('name')
             ->add('price')
-            ->add('imageFilename')
-            // Collection des tailles et quantités
+            ->add('imageFilename', FileType::class, [
+                'label' => 'Image du produit',
+                'mapped' => false,
+                'required' => false,
+            ])
             ->add('sizeStocks', CollectionType::class, [
-                'entry_type' => ProductSizeStockType::class, // Type de formulaire pour ProductSizeStock
-                'entry_options' => ['label' => false],  // Pas de label pour chaque entrée
-                'allow_add' => true,  // Permet l'ajout dynamique via JavaScript
-                'by_reference' => false,  // Permet de gérer les entités correctement
-                'prototype' => true, // Permet d'ajouter de nouveaux éléments dynamiquement
+                'entry_type' => ProductSizeType::class, // Formulaire pour chaque taille et quantité
+                'entry_options' => ['label' => false],
+                'allow_add' => true,  // Permet l'ajout dynamique des tailles
+                'by_reference' => false,  // Nécessaire pour manipuler correctement les objets entité
+                'prototype' => false, // Nous n'utilisons pas de prototype ici
+            ])
+            ->add('isFeatured', CheckboxType::class, [
+                'label'    => 'Mettre en avant',
+                'required' => false,
             ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Product::class,  // L'entité associée est Product
+            'data_class' => Product::class,
         ]);
     }
 }
+
+
+
 
 
 

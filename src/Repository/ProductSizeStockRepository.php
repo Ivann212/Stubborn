@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ProductSizeStock;
+use App\Entity\ProductSize;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -13,7 +13,7 @@ class ProductSizeStockRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ProductSizeStock::class);
+        parent::__construct($registry, ProductSize::class);
     }
 
     //    /**

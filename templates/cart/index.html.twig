@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Mon Panier{% endblock %}
 
 {% block body %}
 <style>
-    
     * {
         margin: 0;
         padding: 0;
@@ -14,18 +13,23 @@
     html, body {
         height: 100%;
         font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
     }
 
     .page-wrapper {
         display: flex;
         flex-direction: column;
-        min-height: 100vh; /* Cela garantit que la page occupe toute la hauteur de l'écran */
+        min-height: 100vh; 
     }
-
+    h2 {
+        text-align: center;
+    }
+    /* Header */
     header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px 0;
+        background-color: #333;
+        color: #fff;
+        padding: 20px 0;
     }
 
     header .container {
@@ -48,23 +52,118 @@
         gap: 20px;
     }
 
-    nav ul li {
-        display: inline-block;
-    }
-
     nav ul li a {
         color: #fff;
         text-decoration: none;
-        font-size: 1.1rem;
     }
-
-    nav ul li a:hover {
-        color: #ff9900;
-    }
-
     main {
-        flex: 1; /* Cette propriété assure que l'élément main prend tout l'espace disponible */
+        flex-grow: 1; /* Permet à main de prendre l'espace restant et de pousser le footer vers le bas */
+    }
+
+    .cart-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        background-color: #fff;
         padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .cart-item {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .cart-item img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .cart-item-details {
+        display: flex;
+        justify-content: space-between;  
+        align-items: center;  
+        padding-left: 30px ;
+        width: 80%;  
+    }
+
+
+
+    .cart-item-details h3 {
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .cart-item-details p {
+        font-size: 1.1rem;
+        color: #666;
+    }
+
+    .remove-item-button {
+        margin: 20px;
+        margin-left: 1000px;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .remove-item-button:hover {
+        background-color: #c0392b;
+    }
+
+    .cart-total-container {
+        display: flex;
+        justify-content: flex-end; /* Les éléments commencent à gauche */
+        gap: 20px; /* Espacement entre le total et les boutons */
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .cart-total {
+        font-size: 1.2rem;
+        color: #333;
+        margin-right: 20px; /* Espacement à droite du total */
+    }
+
+    .checkout-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .checkout-buttons button {
+        padding: 12px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: 200px;
+        cursor: pointer;
+    }
+
+    .finalize-button {
+        background-color: red;
+        color: white;
+        border: none;
+    }
+
+    .continue-shopping-button {
+        background-color: #218838;
+        color: white;
+        border: none;
+    }
+
+    .continue-shopping-button a {
+        text-decoration: none;
+        color: #fff;
     }
 
     footer {
@@ -89,7 +188,7 @@
     .footer-section h4 {
         margin-bottom: 10px;
         font-size: 1.1rem;
-        color: #ff9900;
+        color: red;
     }
 
     .footer-section p {
@@ -99,43 +198,109 @@
     .footer-bottom {
         font-size: 2rem;
         margin-top: 20px;
-        border-top: 1px solid #666;
+        border-top: 3px solid #666;
         padding-top: 10px;
     }
 
     .footer a {
-        color: #ff9900;
+        color: red;
         text-decoration: none;
     }
 
     .footer a:hover {
         text-decoration: underline;
     }
-
-
 </style>
 
-<div class="example-wrapper">
+<div class="page-wrapper">
     <header>
-            <div class="container">
-                <div class="logo">
-                    <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
-                </div>
-                <nav>
-                    <ul class="nav-links">
-                        {% if app.user is not null %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/product">Produits</a></li>
-                            <li><a href="/cart">S'inscrire</a></li>
-                            <li><a href="/logout">Se déconnecter</a></li>
-                        {% else %}
-                            <li><a href="/">Accueil</a></li>
-                            <li><a href="/login">Se connecter</a></li>
-                            <li><a href="/register">S'inscrire</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo-link"><img src="{{ asset('images/Logo.png') }}" alt="Logo"></a>
             </div>
-        </header>
-</div>
+            <nav>
+                <ul class="nav-links">
+                    {% if app.user is not null %}
+                        <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                        <li><a href="/product" class="{{ app.request.attributes.get('_route') == 'app_product' ? 'active' : '' }}">Boutique</a></li>
+                        <li><a href="/cart" class="{{ app.request.attributes.get('_route') == 'cart' ? 'active' : '' }}">Panier</a></li>
+                        <li><a href="/logout">Se déconnecter</a></li>
+                    {% else %}
+                        <li><a href="/" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}">Accueil</a></li>
+                        <li><a href="/login" class="{{ app.request.attributes.get('_route') == 'app_login' ? 'active' : '' }}">Se connecter</a></li>
+                        <li><a href="/register" class="{{ app.request.attributes.get('_route') == 'app_register' ? 'active' : '' }}">S'inscrire</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+<main>
+        <div class="cart-container">
+            <h2>Mon Panier</h2>
+
+            {% if cart is empty %}
+                <p>Votre panier est vide.</p>
+                <button class="continue-shopping-button"><a href="/product">Continuer mes achats</a></button>
+            {% else %}
+                <div class="cart-items">
+                    {% for item in cart %}
+                        <div class="cart-item">
+                            <img src="{{ asset('images/' ~ item.product.imageFilename) }}" alt="{{ item.product.name }}">
+                            <div class="cart-item-details">
+                                <h3>{{ item.product.name }}</h3>
+                                <p>{{ item.product.price }} €</p>
+                                <p>Taille: {{ item.product.sizeStocks[0].size ?: 'Taille unique' }}</p>
+                            </div>
+                        </div>
+                        <button class="remove-item-button">
+                            <a href="{{ path('cart_remove', {id: item.product.id}) }}" style="color: white; text-decoration: none;">Retirer du panier</a>
+                        </button>
+                    {% endfor %}
+                </div>
+
+                <div class="cart-total-container">
+                    <div class="cart-total">
+                        <p><strong>Total: {{ total }} €</strong></p>
+                    </div>
+                    <div class="checkout-buttons">
+                        <button class="finalize-button">Finaliser ma commande</button>
+                        <button class="continue-shopping-button"><a href="/product" style="color: white; text-decoration: none;">Continuer mes achats</a></button>
+                    </div>
+                </div>  
+            {% endif %}
+        </div>
+    </main>
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Nom de la société</h4>
+                        <p>Stubborn</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Adresse</h4>
+                        <p>Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p>Email: <a href="mailto:stubborn@blabla.com">stubborn@blabla.com</a></p>
+                    </div>
+                    
+                </div>
+                <div class="footer-bottom">
+                    <p>Don't compromise on your look</p>
+                </div>
+            </div>
+        </footer>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe("{{ stripePublicKey }}");
+    document.getElementById("checkout-button").addEventListener("click", async () => {
+        const response = await fetch("{{ path('checkout') }}");
+        const session = await response.json();
+        stripe.redirectToCheckout({ sessionId: session.id });
+    });
+</script>
 {% endblock %}

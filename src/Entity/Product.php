@@ -27,8 +27,11 @@ class Product
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $imageFilename = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isFeatured = false; 
+
     // Relation OneToMany avec ProductSizeStock
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductSizeStock::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductSize::class, orphanRemoval: true)]
     private Collection $sizeStocks;
 
     public function __construct()
@@ -64,6 +67,16 @@ class Product
 
         return $this;
     }
+    public function isFeatured(): bool
+    {
+        return $this->isFeatured;
+    }
+
+    public function setisFeatured(bool $isFeatured): self
+    {
+        $this->isFeatured = $isFeatured;
+        return $this;
+    }
 
     // Getter et Setter pour l'image
     public function getImageFilename(): ?string
@@ -85,7 +98,7 @@ class Product
     }
 
     // Ajouter un stock pour une taille
-    public function addSizeStock(ProductSizeStock $sizeStock): self
+    public function addSizeStock(ProductSize $sizeStock): self
     {
         if (!$this->sizeStocks->contains($sizeStock)) {
             $this->sizeStocks[] = $sizeStock;
@@ -96,7 +109,7 @@ class Product
     }
 
     // Retirer un stock pour une taille
-    public function removeSizeStock(ProductSizeStock $sizeStock): self
+    public function removeSizeStock(ProductSize $sizeStock): self
     {
         if ($this->sizeStocks->removeElement($sizeStock)) {
             // Set the owning side to null (unless already changed)
