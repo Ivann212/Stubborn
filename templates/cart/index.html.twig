@@ -107,7 +107,6 @@
 
     .remove-item-button {
         margin: 20px;
-        margin-left: 1000px;
         background-color: #e74c3c;
         color: white;
         border: none;
@@ -119,11 +118,16 @@
     .remove-item-button:hover {
         background-color: #c0392b;
     }
+    .remove-item-button-container{
+        display: flex;
+        justify-content: flex-end; 
+        margin-right: 40px;
+    }
 
     .cart-total-container {
         display: flex;
-        justify-content: flex-end; /* Les éléments commencent à gauche */
-        gap: 20px; /* Espacement entre le total et les boutons */
+        justify-content: flex-end; 
+        gap: 20px; 
         align-items: center;
         margin-top: 20px;
     }
@@ -131,7 +135,10 @@
     .cart-total {
         font-size: 1.2rem;
         color: #333;
-        margin-right: 20px; /* Espacement à droite du total */
+        margin-right: 20px; 
+        padding : 10px;
+        margin-bottom: 60px;
+        border: solid;
     }
 
     .checkout-buttons {
@@ -235,7 +242,7 @@
         </div>
     </header>
 
-<main>
+    <main>
         <div class="cart-container">
             <h2>Mon Panier</h2>
 
@@ -253,19 +260,26 @@
                                 <p>Taille: {{ item.product.sizeStocks[0].size ?: 'Taille unique' }}</p>
                             </div>
                         </div>
-                        <button class="remove-item-button">
-                            <a href="{{ path('cart_remove', {id: item.product.id}) }}" style="color: white; text-decoration: none;">Retirer du panier</a>
-                        </button>
+                        <div class="remove-item-button-container">
+                            <button class="remove-item-button">
+                                <a href="{{ path('cart_remove', {id: item.product.id}) }}" style="color: white; text-decoration: none;">Retirer du panier</a>
+                            </button>
+                        </div>
+                        
                     {% endfor %}
                 </div>
 
                 <div class="cart-total-container">
                     <div class="cart-total">
-                        <p><strong>Total: {{ total }} €</strong></p>
+                        <p><strong>TOTAL: {{ total }} €</strong></p>
                     </div>
                     <div class="checkout-buttons">
-                        <button class="finalize-button">Finaliser ma commande</button>
-                        <button class="continue-shopping-button"><a href="/product" style="color: white; text-decoration: none;">Continuer mes achats</a></button>
+                        <form id="checkout-form" action="{{ path('checkout') }}" method="POST">
+                            <button type="submit" class="finalize-button">Finaliser ma commande</button>
+                        </form>
+                        <button class="continue-shopping-button">
+                            <a href="{{ path('app_product') }}" style="color: white; text-decoration: none;">Continuer mes achats</a>
+                        </button>
                     </div>
                 </div>  
             {% endif %}
@@ -288,19 +302,40 @@
                     </div>
                     
                 </div>
-                <div class="footer-bottom">
-                    <p>Don't compromise on your look</p>
-                </div>
+                
             </div>
         </footer>
 
 <script src="https://js.stripe.com/v3/"></script>
+
 <script>
-    const stripe = Stripe("{{ stripePublicKey }}");
-    document.getElementById("checkout-button").addEventListener("click", async () => {
-        const response = await fetch("{{ path('checkout') }}");
-        const session = await response.json();
-        stripe.redirectToCheckout({ sessionId: session.id });
+    var stripe = Stripe('{{ stripe_public_key }}'); // Ta clé publique Stripe
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkoutButton = document.querySelector('.finalize-button');
+
+        checkoutButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Empêcher le rechargement de la page
+
+            fetch('{{ path('checkout') }}', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(session => {
+                if (session.id) {
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                } else {
+                    alert('Erreur lors de la création de la session Stripe.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
+        });
     });
 </script>
+
 {% endblock %}

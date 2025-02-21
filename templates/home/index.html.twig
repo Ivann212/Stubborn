@@ -196,6 +196,13 @@
 
 
 <body>
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
 
     <div class="page-wrapper">
         <header>
@@ -260,9 +267,7 @@
                     </div>
                     
                 </div>
-                <div class="footer-bottom">
-                    <p>Don't compromise on your look</p>
-                </div>
+                
             </div>
         </footer>
     </div>
