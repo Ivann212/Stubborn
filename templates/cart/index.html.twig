@@ -27,9 +27,9 @@
     }
     /* Header */
     header {
-        background-color: #333;
-        color: #fff;
-        padding: 20px 0;
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
     }
 
     header .container {
@@ -52,9 +52,24 @@
         gap: 20px;
     }
 
+    nav ul li {
+        display: inline-block;
+    }
+
     nav ul li a {
         color: #fff;
         text-decoration: none;
+        font-size: 1.1rem;
+    }
+
+    nav ul li a:hover {
+        color: red;
+    }
+
+    .nav-links a.active {
+        font-weight: bold;
+        text-decoration: underline;
+        color: red; 
     }
     main {
         flex-grow: 1; /* Permet à main de prendre l'espace restant et de pousser le footer vers le bas */
@@ -309,19 +324,20 @@
 <script src="https://js.stripe.com/v3/"></script>
 
 <script>
-    var stripe = Stripe('{{ stripe_public_key }}'); // Ta clé publique Stripe
+    var stripe = Stripe('{{ stripe_public_key }}'); 
 
     document.addEventListener('DOMContentLoaded', function () {
         var checkoutButton = document.querySelector('.finalize-button');
 
         checkoutButton.addEventListener('click', function (event) {
-            event.preventDefault(); // Empêcher le rechargement de la page
+            event.preventDefault(); 
 
             fetch('{{ path('checkout') }}', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({}) 
             })
             .then(response => response.json())
             .then(session => {
@@ -337,5 +353,6 @@
         });
     });
 </script>
+
 
 {% endblock %}

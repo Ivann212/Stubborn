@@ -129,6 +129,21 @@
             font-size: 1.2rem;
             cursor: pointer;
         }
+
+        .ButtonSupp {
+            padding-top: 170px;
+            padding-right: 10px;
+            
+        }
+        .ButtonSupp button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
         .form-row button a {
             text-decoration: none;
             color: #fff;
@@ -147,18 +162,16 @@
             border-radius: 5px;
             font-size: 1.2rem;
             cursor: pointer;
-
         }
 
         .champForm {
             display: flex;
             flex-direction: row;
         }
-        .formsButton {
+        .ModifyButton  {
             display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            margin-right: 20px;
+            justify-content: end;
+            padding-right: 20px;
         }
 
         .form-row button:hover {
@@ -199,6 +212,19 @@
             border-radius: 8px;
         }
 
+        .ModifyButton button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .ModifyButton {
+            padding-top: 40px;
+        }
         footer {
         background-color: #333;
         color: #fff;
@@ -317,14 +343,13 @@
                 <div class="products">
                     {% for product in products %}
                         <div class="product-card">
-                            <img src=" {{ asset('images/' ~ product.imageFilename) }}" alt="{{ product.name }}">
+                            <img src="{{ asset('images/' ~ product.imageFilename) }}" alt="{{ product.name }}">
 
                             {# Formulaire de modification par produit #}
-                            <div class="formModif">
-                                <form method="POST" action="{{ path('app_backoffice') }}">
-                                    <input type="hidden" name="edit_product_id" value="{{ product.id }}">
+                            <form method="POST" action="{{ path('app_backoffice_edit', {'id': product.id}) }}">
+                                <input type="hidden" name="edit_product_id" value="{{ product.id }}">
 
-                                    {% if editForms[product.id] is defined %}
+                                {% if editForms[product.id] is defined %}
                                     <div class="champForm">
                                         {{ form_start(editForms[product.id]) }}
 
@@ -351,30 +376,29 @@
                                                 {% endfor %}
                                             </div>
                                     </div>
-                                        
-                                            <div class="formsButton">
-                                                <div class="form-row">
-                                                    <button type="submit">Modifier</button>
-                                                </div>
-                                                <div class="form-row">
-                                                    <button type="submit"><a href="app_backoffice_delete">Supprimer</a></button>
-                                                </div>
-                                            </div>
-                                        
-
-                                        {{ form_end(editForms[product.id]) }}
-                                    {% else %}
-                                        <p>Formulaire de modification non disponible.</p>
-                                    {% endif %}
+                                    
+                                    <div class="ModifyButton">
+                                        <button type="submit" class="formsButton">Modifier</button>
+                                    </div>
+                                    
+                                {{ form_end(editForms[product.id]) }}
+                                
+                                {% else %}
+                                    <p>Formulaire de modification non disponible.</p>
+                                {% endif %}
+                            </form>
+                            <div class="ButtonSupp">
+                                <form method="POST" action="{{ path('app_backoffice_delete', {'id': product.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                    <button type="submit" class="formsButton">Supprimer</button>
                                 </form>
                             </div>
+                            
                         </div>
                     {% endfor %}
-                    
                 </div>
-
-
             </div>
+
 
         </main>
 
